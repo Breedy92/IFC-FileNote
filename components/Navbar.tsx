@@ -33,11 +33,7 @@ export function Navbar() {
             {isSignedIn && (
               <>
                 <UserButton afterSignOutUrl="/" />
-                <SignOutButton>
-                  <Button size="sm" className="bg-red-600 hover:bg-red-700 text-white">
-                    Sign Out
-                  </Button>
-                </SignOutButton>
+                <SignOutButton/>
               </>
             )}
           </div>

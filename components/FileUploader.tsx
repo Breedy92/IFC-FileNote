@@ -82,7 +82,7 @@ export function FileUploader({
               </h3>
               {!fileName && (
                 <p className="text-sm text-muted-foreground">
-                  or click to select a file (TXT, MD, DOCX up to 10MB)
+                  or click to select a file (TXT, DOCX up to 10MB)
                 </p>
               )}
             </div>
@@ -127,12 +127,12 @@ export function FileUploader({
               {isAnalyzing ? (
                 <>
                   <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                  Analyzing...
+                  Analysing...
                 </>
               ) : (
                 <>
                   <Wand2 className="mr-2 h-5 w-5" />
-                  Analyze Transcript
+                  Analyse Transcript
                 </>
               )}
             </Button>

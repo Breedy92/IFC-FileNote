@@ -67,7 +67,7 @@ export function AnalysisOutput({
               <div className="absolute inset-0 bg-background/50 backdrop-blur-sm flex items-center justify-center rounded-lg">
                 <div className="flex flex-col items-center space-y-4">
                   <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                  <p className="text-sm text-muted-foreground">Analyzing your transcript...</p>
+                  <p className="text-sm text-muted-foreground">Analysing your transcript...</p>
                 </div>
               </div>
             )}

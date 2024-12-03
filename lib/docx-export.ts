@@ -9,22 +9,26 @@ function stripHtml(html: string): string {
   return tempDiv.textContent || tempDiv.innerText || "";
 }
 
-function createParagraphWithBoldKey(
+function createParagraphWithKeyValue(
   text: string,
   options: Partial<IParagraphOptions & { size?: number; color?: string; italics?: boolean }> = {}
 ): Paragraph | null {
   const cleanText = stripHtml(text).trim();
   if (!cleanText) return null; // Skip empty paragraphs
 
-  const [key, ...rest] = cleanText.split(":");
-  const value = rest.join(":").trim();
+  const colonIndex = cleanText.indexOf(":"); // Find the first colon
+  const hasColon = colonIndex !== -1;
+
+  const key = hasColon ? cleanText.slice(0, colonIndex).trim() : ""; // Extract text before colon
+  const value = hasColon ? cleanText.slice(colonIndex + 1).trim() : cleanText; // Extract text after colon or entire text
 
   const textRuns = [];
 
+  // Add the key in bold if it exists
   if (key) {
     textRuns.push(
       new TextRun({
-        text: `${key}:`,
+        text: key, // Use the key as-is, no colon added
         bold: true,
         size: options.size || 24,
         font: "Calibri",
@@ -33,10 +37,11 @@ function createParagraphWithBoldKey(
     );
   }
 
+  // Add the value as normal text
   if (value) {
     textRuns.push(
       new TextRun({
-        text: ` ${value}`,
+        text: ` ${value}`, // Add a space before the value
         bold: false,
         size: options.size || 24,
         font: "Calibri",
@@ -135,33 +140,19 @@ function parseContent(content: string): Document {
           Array.from(element.children).forEach((li) => {
             const listItemText = stripHtml(li.textContent || "").trim();
             if (listItemText) {
-              if (listItemText.includes(":")) {
-                const bulletParagraph = createParagraphWithBoldKey(listItemText, {
-                  size: 24,
-                  color: "000000",
-                });
-                if (bulletParagraph) sections[0].children.push(bulletParagraph);
-              } else {
-                const bulletParagraph = new Paragraph({
-                  spacing: { before: 200, after: 200, line: 240 },
-                  children: [
-                    new TextRun({
-                      text: `• ${listItemText}`,
-                      size: 24,
-                      font: "Calibri",
-                      color: "000000",
-                    }),
-                  ],
-                });
-                if (bulletParagraph) sections[0].children.push(bulletParagraph);
-              }
+              const bulletParagraph = createParagraphWithKeyValue(listItemText, {
+                size: 24,
+                color: "000000",
+              });
+              if (bulletParagraph) sections[0].children.push(bulletParagraph);
             }
           });
           continue;
 
         case "p":
         default:
-          paragraph = createParagraphWithBoldKey(text, {
+          // Use the function to split into key-value formatting
+          paragraph = createParagraphWithKeyValue(text, {
             size: 24,
             color: "000000",
           });

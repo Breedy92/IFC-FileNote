@@ -233,20 +233,20 @@ export function TranscriptAnalyzer() {
 }
 
 const MEETING_TYPES = [
-  { id: 'initial', label: 'Initial Meeting', keywords: ['initial meeting'] },
-  { id: 'strategy', label: 'Strategy Presentation', keywords: ['strategy discussion meeting', 'advice recommendation meeting'] },
-  { id: 'annual', label: 'Annual Review Meeting', keywords: ['annual progress meeting'] },
-  { id: 'soa', label: 'SOA Presentation', keywords: ['soa presentation'] },
+  { id: 'initial', label: 'Initial Meeting', keywords: ['initial meeting', 'new client'] },
+  { id: 'strategy', label: 'Strategy Presentation', keywords: ['strategy discussion', 'strategy presentation'] },
+  { id: 'annual', label: 'Annual Review Meeting', keywords: ['annual review', 'annual progress'] },
+  { id: 'soa', label: 'SOA Presentation', keywords: ['advice recommendation', 'soa', 'statement of advice'] },
 ] as const;
 
 const detectMeetingType = (fileName: string): string | null => {
   const lowerFileName = fileName.toLowerCase();
-  
+
   for (const type of MEETING_TYPES) {
     if (type.keywords.some(keyword => lowerFileName.includes(keyword))) {
       return type.id;
     }
   }
-  
+
   return null;
 };

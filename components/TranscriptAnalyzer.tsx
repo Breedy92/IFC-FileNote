@@ -236,7 +236,7 @@ const MEETING_TYPES = [
   { id: 'initial', label: 'Initial Meeting', keywords: ['initial meeting', 'new client'] },
   { id: 'strategy', label: 'Strategy Presentation', keywords: ['strategy discussion', 'strategy presentation'] },
   { id: 'annual', label: 'Annual Review Meeting', keywords: ['annual review', 'annual progress'] },
-  { id: 'soa', label: 'SOA Presentation', keywords: ['advice recommendation', 'soa', 'statement of advice'] },
+  { id: 'soa', label: 'SOA Presentation', keywords: ['advice recommendation'] },
 ] as const;
 
 const detectMeetingType = (fileName: string): string | null => {

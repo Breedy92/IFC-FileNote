@@ -5,31 +5,52 @@ export const MEETING_PROMPTS = {
 
 <p>The file note should include the following sections:</p>
 
-<h2>1. Client Names</h2>
-<p>Extract the clients' names from the transcript. If not explicitly mentioned, use the document title as a fallback. For example, if the title contains "GREGORY, Kye & Alisha", the clients' names should appear as "Kye Gregory and Alisha Gregory."</p>
+<h2>1. Meeting Details</h2>
+<ul>
+<li><b>Client Name</b>: Extract the clients' names by combining information from the transcript and the document title. 
+<ul>
+  <li>If full names are explicitly mentioned in the transcript, use those names.</li>
+  <li>If only partial names (e.g., first names) are mentioned in the transcript, match them with the last names from the document title to form complete names.</li>
+  <li>If no names are explicitly mentioned in the transcript, use the names from the document title verbatim. For example, if the title contains "Barry & Jill Anderson," the clients' names should appear as "Barry Anderson and Jill Anderson."</li>
+</ul>
+</li>
+  <li><b>Client Attendance</b>: Identify all clients discussed in the meeting. Clearly indicate who was present or absent and, if applicable, include any reasons for absence provided in the transcript. Provide additional context if noted in the discussion.</li>
+  <li><b>Adviser Present</b>: Identify the adviser(s) present using the following steps:
+    <ul>
+      <li>If the person recording the transcript is mentioned as the adviser (e.g., "Troy"), use their name as the adviser present unless otherwise specified in the transcript.</li>
+      <li>If the transcript explicitly identifies the adviser by name (e.g., "Matt Katunar" or "Briannah Starkey"), replace the name with the corresponding substitute:
+        <ul>
+          <li>Replace "Matt Katunar" with <b>Will McEniery-Wallace</b>.</li>
+          <li>Replace "Briannah Starkey" with <b>Jonathon Perna</b>.</li>
+        </ul>
+      </li>
+      <li>If both the recorder and an adviser are mentioned, prioritize the explicitly identified adviser but still apply the substitution rule for Matt or Briannah as needed.</li>
+    </ul>
+    <b>Do not mention any replacement or original name; only show the final substituted names, e.g., 'Will McEniery-Wallace' or 'Jonathon Perna.'</b>
+  </li>
+  <li><b>Date of Meeting</b>: Extract the meeting date from the transcript and format it as DD/MM/YYYY.</li>
+  <li><b>Method of Meeting</b>: Specify whether the meeting was conducted <b>"In-person"</b> or <b>"Online"</b>. Use the following rules:
+    <ul>
+      <li>If only one speaker is consistently identified, assume an in-person meeting where others in the room may not have been recorded.</li>
+      <li>If two or more speakers are consistently identified, assume it was an online or video conference meeting.</li>
+      Output either <b>"In-person"</b> or <b>"Online"</b> without any further explanation.
+      </ul>
+  </li>
+</ul>
 
-<h2>2. Adviser Present</h2>
-<p>Identify the adviser(s) present in the meeting.</p>
-
-<h2>3. Date of Meeting</h2>
-<p>Extract the date of the meeting from the transcript.</p>
-
-<h2>4. Method of Meeting</h2>
-<p>Specify how the meeting was conducted (e.g., in-person, video conference).</p>
-
-<h2>5. Reason for Meeting</h2>
+<h2>2. Reason for Meeting</h2>
 <p>Summarize the reason for the meeting, specifically why the clients are seeking financial advice.</p>
 
-<h2>6. Reason for Seeking Advice</h2>
+<h2>3. Reason for Seeking Advice</h2>
 <p>Explain the clients' motivation for seeking financial advice, based on their long-term financial goals or concerns.</p>
 
-<h2>7. Overview of Personal Situation</h2>
+<h2>4. Overview of Personal Situation</h2>
 <p>Summarize the clients' personal information, including their professions, family details, and any other relevant personal background.</p>
 
-<h2>8. Overview of Financial Situation</h2>
+<h2>5. Overview of Financial Situation</h2>
 <p>Summarize the clients' financial situation, including assets, debts, and investments (e.g., mortgage, savings, superannuation).</p>
 
-<h2>9. Goals and Objectives</h2>
+<h2>6. Goals and Objectives</h2>
 <p>Identify the clients' short, medium, and long-term goals, as discussed during the meeting:</p>
 <ul>
   <li><b>Short-Term Goals:</b> [Details]</li>
@@ -37,7 +58,7 @@ export const MEETING_PROMPTS = {
   <li><b>Long-Term Goals:</b> [Details]</li>
 </ul>
 
-<h2>10. Summary of Discovery Meeting</h2>
+<h2>7. Summary of Discovery Meeting</h2>
 <p>Provide a detailed summary of the discovery meeting, including:</p>
 <ul>
   <li>The clients' reasons for seeking advice.</li>
@@ -47,10 +68,10 @@ export const MEETING_PROMPTS = {
   <li>Any significant advice provided during the meeting, such as the discussion of different financial products or strategies.</li>
 </ul>
 
-<h2>11. Fee Details</h2>
+<h2>8. Fee Details</h2>
 <p>Include the adviser's fee structure if discussed (e.g., fee for the Statement of Advice or ongoing service fees).</p>
 
-<h2>12. Action Items and Next Steps</h2>
+<h2>9. Action Items and Next Steps</h2>
 <p>Summarize the next steps with clear responsibilities:</p>
 <ul>
   <li><b>Tasks for Clients:</b>
@@ -78,24 +99,37 @@ export const MEETING_PROMPTS = {
   <p>The file note should include the following sections:</p>
   
   <h2>1. Meeting Details</h2>
-  <ul>
-    <li><b>Client Names:</b> Extract the clients' names from the transcript. If not explicitly mentioned, use the document title as a fallback. For example, if the title contains "GREGORY, Kye & Alisha," the clients' names should appear as "Kye Gregory and Alisha Gregory."</li>
-    <li><b>Adviser Present:</b> Identify the adviser(s) present in the meeting.
-      <ul>
-        <li>If the adviser is identified as Matt Katunar, display the name as <b>Will McEniery-Wallace</b>.</li>
-        <li>If the adviser is identified as Briannah Starkey, display the name as <b>Jonathon Perna</b>.</li>
-      </ul>
-      <b>Do not mention any replacement; only show Will McEniery-Wallace or Jonathon Perna as the adviser.</b>
-    </li>
-    <li><b>Date of Meeting:</b> Extract the date of the meeting from the transcript.</li>
-    <li><b>Method of Meeting:</b> Based on the transcript, determine whether the meeting was conducted <b>in person</b> or <b>online</b>.
-      <ul>
-        <li>If only one speaker is consistently identified in the transcript, assume it was likely an in-person meeting.</li>
-        <li>If two or more speakers are present and identified, assume it was likely an online or video conference meeting.</li>
-      </ul>
+<ul>
+<li><b>Client Name</b>: Extract the clients' names by combining information from the transcript and the document title. 
+<ul>
+  <li>If full names are explicitly mentioned in the transcript, use those names.</li>
+  <li>If only partial names (e.g., first names) are mentioned in the transcript, match them with the last names from the document title to form complete names.</li>
+  <li>If no names are explicitly mentioned in the transcript, use the names from the document title verbatim. For example, if the title contains "Barry & Jill Anderson," the clients' names should appear as "Barry Anderson and Jill Anderson."</li>
+</ul>
+</li>
+  <li><b>Client Attendance</b>: Identify all clients discussed in the meeting. Clearly indicate who was present or absent and, if applicable, include any reasons for absence provided in the transcript. Provide additional context if noted in the discussion.</li>
+  <li><b>Adviser Present</b>: Identify the adviser(s) present using the following steps:
+    <ul>
+      <li>If the person recording the transcript is mentioned as the adviser (e.g., "Troy"), use their name as the adviser present unless otherwise specified in the transcript.</li>
+      <li>If the transcript explicitly identifies the adviser by name (e.g., "Matt Katunar" or "Briannah Starkey"), replace the name with the corresponding substitute:
+        <ul>
+          <li>Replace "Matt Katunar" with <b>Will McEniery-Wallace</b>.</li>
+          <li>Replace "Briannah Starkey" with <b>Jonathon Perna</b>.</li>
+        </ul>
+      </li>
+      <li>If both the recorder and an adviser are mentioned, prioritize the explicitly identified adviser but still apply the substitution rule for Matt or Briannah as needed.</li>
+    </ul>
+    <b>Do not mention any replacement or original name; only show the final substituted names, e.g., 'Will McEniery-Wallace' or 'Jonathon Perna.'</b>
+  </li>
+  <li><b>Date of Meeting</b>: Extract the meeting date from the transcript and format it as DD/MM/YYYY.</li>
+  <li><b>Method of Meeting</b>: Specify whether the meeting was conducted <b>"In-person"</b> or <b>"Online"</b>. Use the following rules:
+    <ul>
+      <li>If only one speaker is consistently identified, assume an in-person meeting where others in the room may not have been recorded.</li>
+      <li>If two or more speakers are consistently identified, assume it was an online or video conference meeting.</li>
       Output either <b>"In-person"</b> or <b>"Online"</b> without any further explanation.
-    </li>
-  </ul>
+      </ul>
+  </li>
+</ul>
   
   <h2>2. Reason for Meeting</h2>
   <p>Provide a detailed summary of why the meeting was held. Explain the context for presenting the financial strategy, including specific client objectives and concerns discussed in the meeting.</p>
@@ -186,14 +220,26 @@ export const MEETING_PROMPTS = {
 
 <h2>1. Meeting Details</h2>
 <ul>
-  <li><b>Client Name</b>: Extract the clients' names from the transcript. If not explicitly mentioned, use the document title as a fallback. For example, if the title contains "GREGORY, Kye & Alisha", the clients' names should appear as "Kye Gregory and Alisha Gregory."</li>
+<li><b>Client Name</b>: Extract the clients' names by combining information from the transcript and the document title. 
+<ul>
+  <li>If full names are explicitly mentioned in the transcript, use those names.</li>
+  <li>If only partial names (e.g., first names) are mentioned in the transcript, match them with the last names from the document title to form complete names.</li>
+  <li>If no names are explicitly mentioned in the transcript, use the names from the document title verbatim. For example, if the title contains "Barry & Jill Anderson," the clients' names should appear as "Barry Anderson and Jill Anderson."</li>
+</ul>
+</li>
   <li><b>Client Attendance</b>: Identify all clients discussed in the meeting. Clearly indicate who was present or absent and, if applicable, include any reasons for absence provided in the transcript. Provide additional context if noted in the discussion.</li>
-  <li><b>Adviser Present</b>: Identify the adviser(s) present. 
+  <li><b>Adviser Present</b>: Identify the adviser(s) present using the following steps:
     <ul>
-      <li>If the adviser is identified as Matt Katunar, display the name as <b>Will McEniery-Wallace</b>.</li>
-      <li>If the adviser is identified as Briannah Starkey, display the name as <b>Jonathon Perna</b>.</li>
+      <li>If the person recording the transcript is mentioned as the adviser (e.g., "Troy"), use their name as the adviser present unless otherwise specified in the transcript.</li>
+      <li>If the transcript explicitly identifies the adviser by name (e.g., "Matt Katunar" or "Briannah Starkey"), replace the name with the corresponding substitute:
+        <ul>
+          <li>Replace "Matt Katunar" with <b>Will McEniery-Wallace</b>.</li>
+          <li>Replace "Briannah Starkey" with <b>Jonathon Perna</b>.</li>
+        </ul>
+      </li>
+      <li>If both the recorder and an adviser are mentioned, prioritize the explicitly identified adviser but still apply the substitution rule for Matt or Briannah as needed.</li>
     </ul>
-    <b>Do not mention any replacement or original name; only show the names Will McEniery-Wallace or Jonathon Perna.</b>
+    <b>Do not mention any replacement or original name; only show the final substituted names, e.g., 'Will McEniery-Wallace' or 'Jonathon Perna.'</b>
   </li>
   <li><b>Date of Meeting</b>: Extract the meeting date from the transcript and format it as DD/MM/YYYY.</li>
   <li><b>Method of Meeting</b>: Specify whether the meeting was conducted <b>"In-person"</b> or <b>"Online"</b>. Use the following rules:
@@ -301,19 +347,37 @@ export const MEETING_PROMPTS = {
   <p>The file note should include the following sections:</p>
   
   <h2>1. Meeting Details</h2>
-  <ul>
-    <li><b>Client Names:</b> Extract the clients' full names from the transcript. If not explicitly mentioned, use the document title as a fallback. For example, if the title contains "GREGORY, Kye & Alisha," the clients' names should appear as "Kye Gregory and Alisha Gregory."</li>
-    <li><b>Adviser Present:</b> Identify all advisers explicitly mentioned in the transcript. For each adviser:
-      <ul>
-        <li>If the adviser is identified as <b>Matt Katunar</b>, display the name as <b>Will McEniery-Wallace</b>.</li>
-        <li>If the adviser is identified as <b>Briannah Starkey</b>, display the name as <b>Jonathon Perna</b>. If Briannah Starkey is mentioned, include <b>Jonathon Perna</b> in the list of advisers present.</li>
-        <li>If any additional advisers are explicitly mentioned (e.g., <b>Trevor Benson</b>), include them in the list of advisers present.</li>
+<ul>
+<li><b>Client Name</b>: Extract the clients' names by combining information from the transcript and the document title. 
+<ul>
+  <li>If full names are explicitly mentioned in the transcript, use those names.</li>
+  <li>If only partial names (e.g., first names) are mentioned in the transcript, match them with the last names from the document title to form complete names.</li>
+  <li>If no names are explicitly mentioned in the transcript, use the names from the document title verbatim. For example, if the title contains "Barry & Jill Anderson," the clients' names should appear as "Barry Anderson and Jill Anderson."</li>
+</ul>
+</li>
+  <li><b>Client Attendance</b>: Identify all clients discussed in the meeting. Clearly indicate who was present or absent and, if applicable, include any reasons for absence provided in the transcript. Provide additional context if noted in the discussion.</li>
+  <li><b>Adviser Present</b>: Identify the adviser(s) present using the following steps:
+    <ul>
+      <li>If the person recording the transcript is mentioned as the adviser (e.g., "Troy"), use their name as the adviser present unless otherwise specified in the transcript.</li>
+      <li>If the transcript explicitly identifies the adviser by name (e.g., "Matt Katunar" or "Briannah Starkey"), replace the name with the corresponding substitute:
+        <ul>
+          <li>Replace "Matt Katunar" with <b>Will McEniery-Wallace</b>.</li>
+          <li>Replace "Briannah Starkey" with <b>Jonathon Perna</b>.</li>
+        </ul>
+      </li>
+      <li>If both the recorder and an adviser are mentioned, prioritize the explicitly identified adviser but still apply the substitution rule for Matt or Briannah as needed.</li>
+    </ul>
+    <b>Do not mention any replacement or original name; only show the final substituted names, e.g., 'Will McEniery-Wallace' or 'Jonathon Perna.'</b>
+  </li>
+  <li><b>Date of Meeting</b>: Extract the meeting date from the transcript and format it as DD/MM/YYYY.</li>
+  <li><b>Method of Meeting</b>: Specify whether the meeting was conducted <b>"In-person"</b> or <b>"Online"</b>. Use the following rules:
+    <ul>
+      <li>If only one speaker is consistently identified, assume an in-person meeting where others in the room may not have been recorded.</li>
+      <li>If two or more speakers are consistently identified, assume it was an online or video conference meeting.</li>
+      Output either <b>"In-person"</b> or <b>"Online"</b> without any further explanation.
       </ul>
-      <b>Ensure the final list includes all updated names as per these rules, and any others explicitly identified in the transcript. Do not include phrases like "formerly [original name]."</b>
-    </li>
-    <li><b>Date of Meeting:</b> Extract the exact date of the meeting from the transcript, including the day, month, and year if available.</li>
-    <li><b>Method of Meeting:</b> Based on the transcript, determine whether the meeting was conducted <b>in person</b> or <b>online</b>. Output either "In-person" or "Online" without further explanation.</li>
-  </ul>
+  </li>
+</ul>
   
   <h2>2. Reason for Meeting</h2>
 <p>Provide a detailed summary of the purpose of the meeting, ensuring client objectives, concerns, and the reason for presenting the SoA are thoroughly documented.</p>

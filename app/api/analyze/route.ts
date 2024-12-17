@@ -70,7 +70,7 @@ export async function POST(req: Request) {
           content: transcript
         }
       ],
-      temperature: 0.5,
+      temperature: 0.4,
       max_tokens: 2000,
     });
 

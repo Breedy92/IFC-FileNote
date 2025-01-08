@@ -5,6 +5,7 @@ import { ThemeProvider } from '@/components/theme-provider';
 import { Toaster } from '@/components/ui/toaster';
 import { Navbar } from '@/components/Navbar';
 import { ClerkProvider } from '@clerk/nextjs';
+import { Analytics } from '@vercel/analytics/next';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -33,6 +34,7 @@ export default function RootLayout({
               {children}
             </div>
             <Toaster />
+            <Analytics /> {/* Add Analytics here to ensure it's loaded globally */}
           </ThemeProvider>
         </body>
       </html>

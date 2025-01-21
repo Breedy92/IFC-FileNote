@@ -38,6 +38,16 @@ export const MEETING_PROMPTS = {
   </li>
 </ul>
 
+<h2>2. Personal Insights</h2>
+<p>Note key personal details shared during the meeting to enhance future interactions, such as:</p>
+<ul>
+  <li><b>Life Events:</b> Milestones like weddings, family achievements, or travel plans.</li>
+  <li><b>Hobbies/Interests:</b> Favorite activities, sports teams, or pastimes.</li>
+  <li><b>Preferences:</b> Communication preferences or personal likes (e.g., coffee, restaurants).</li>
+  <li><b>Family and Challenges:</b> Mentions of family, pets, or significant life challenges.</li>
+</ul>
+<p><b>Purpose:</b> Use these insights to personalize future conversations and demonstrate genuine care.</p>
+
 <h2>2. Reason for Meeting</h2>
 <p>Summarize the reason for the meeting, specifically why the clients are seeking financial advice.</p>
 
@@ -130,7 +140,17 @@ export const MEETING_PROMPTS = {
       </ul>
   </li>
 </ul>
-  
+
+<h2>2. Personal Insights</h2>
+<p>Note key personal details shared during the meeting to enhance future interactions, such as:</p>
+<ul>
+  <li><b>Life Events:</b> Milestones like weddings, family achievements, or travel plans.</li>
+  <li><b>Hobbies/Interests:</b> Favorite activities, sports teams, or pastimes.</li>
+  <li><b>Preferences:</b> Communication preferences or personal likes (e.g., coffee, restaurants).</li>
+  <li><b>Family and Challenges:</b> Mentions of family, pets, or significant life challenges.</li>
+</ul>
+<p><b>Purpose:</b> Use these insights to personalize future conversations and demonstrate genuine care.</p>
+
   <h2>2. Reason for Meeting</h2>
   <p>Provide a detailed summary of why the meeting was held. Explain the context for presenting the financial strategy, including specific client objectives and concerns discussed in the meeting.</p>
   
@@ -249,6 +269,16 @@ export const MEETING_PROMPTS = {
     </ul>
   </li>
 </ul>
+
+<h2>2. Personal Insights</h2>
+<p>Note key personal details shared during the meeting to enhance future interactions, such as:</p>
+<ul>
+  <li><b>Life Events:</b> Milestones like weddings, family achievements, or travel plans.</li>
+  <li><b>Hobbies/Interests:</b> Favorite activities, sports teams, or pastimes.</li>
+  <li><b>Preferences:</b> Communication preferences or personal likes (e.g., coffee, restaurants).</li>
+  <li><b>Family and Challenges:</b> Mentions of family, pets, or significant life challenges.</li>
+</ul>
+<p><b>Purpose:</b> Use these insights to personalize future conversations and demonstrate genuine care.</p>
 
 <h2>2. Reason for Meeting</h2>
 <p>Summarize the purpose of the meeting based on the transcript. This should highlight the review of the client's financial situation, portfolio performance, and any strategy adjustments discussed. Clearly articulate the specific goals or objectives the adviser and client sought to achieve during the meeting.</p>
@@ -378,7 +408,17 @@ export const MEETING_PROMPTS = {
       </ul>
   </li>
 </ul>
-  
+
+<h2>2. Personal Insights</h2>
+<p>Note key personal details shared during the meeting to enhance future interactions, such as:</p>
+<ul>
+  <li><b>Life Events:</b> Milestones like weddings, family achievements, or travel plans.</li>
+  <li><b>Hobbies/Interests:</b> Favorite activities, sports teams, or pastimes.</li>
+  <li><b>Preferences:</b> Communication preferences or personal likes (e.g., coffee, restaurants).</li>
+  <li><b>Family and Challenges:</b> Mentions of family, pets, or significant life challenges.</li>
+</ul>
+<p><b>Purpose:</b> Use these insights to personalize future conversations and demonstrate genuine care.</p>
+
   <h2>2. Reason for Meeting</h2>
 <p>Provide a detailed summary of the purpose of the meeting, ensuring client objectives, concerns, and the reason for presenting the SoA are thoroughly documented.</p>
 

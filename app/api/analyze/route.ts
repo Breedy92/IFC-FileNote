@@ -59,7 +59,7 @@ export async function POST(req: Request) {
     });
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-5",
+      model: "gpt-5.1",
       messages: [
         {
           role: "system",
@@ -71,7 +71,7 @@ export async function POST(req: Request) {
         }
       ],
       temperature: 0.4,
-      max_tokens: 2000,
+      max_completion_tokens: 2000,
     });
 
     const summary = completion.choices[0]?.message?.content;

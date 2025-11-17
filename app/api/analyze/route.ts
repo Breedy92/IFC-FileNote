@@ -59,7 +59,7 @@ export async function POST(req: Request) {
     });
 
     const completion = await openai.chat.completions.create({
-      model: "gpt-5.1",
+      model: "gpt-5",
       messages: [
         {
           role: "system",

@@ -100,7 +100,19 @@ export const MEETING_PROMPTS = {
 
 <p><b>Ensure that each section is clearly separated and formatted appropriately for a professional financial planning file note.</b></p>
 <p><b>Include any specific terms or suggestions made by the adviser during the meeting.</b></p>
-<p><b>Ensure that every point in the file note is directly and explicitly based on the transcript. Do not infer or assume information that is not clearly stated by the adviser or the client during the meeting.</b></p>`,
+<p><b>Ensure that every point in the file note is directly and explicitly based on the transcript. Do not infer or assume information that is not clearly stated by the adviser or the client during the meeting.</b></p>
+
+<p><b>Formatting requirements for your response:</b> 
+Return the file note in <b>Markdown only</b> (no HTML tags in your response) using the following rules:
+<ul>
+  <li>Use <code># </code> for the main title.</li>
+  <li>Use <code>## </code> for section headings (for example: <code>## 1. Meeting Details</code>).</li>
+  <li>Use <code>### </code> for any sub-headings.</li>
+  <li>Use bullet lists with <code>* </code> at the start of each bullet point.</li>
+</ul>
+Do not use hyphen bullets (<code>- </code>) or HTML headings in your response; use Markdown syntax only.
+</p>
+`,
 
   strategy: `<h1>Strategy Presentation Meeting File Note</h1>
 
@@ -230,6 +242,17 @@ export const MEETING_PROMPTS = {
   <p><b>Ensure that every section is detailed and exhaustive, and formatted professionally for a financial planning file note.</b></p>
   <p><b>Replace adviser names "Matt Katunar" with "Will McEniery-Wallace" and "Briannah Starkey" with "Jonathon Perna" where applicable, without indicating any replacement.</b></p>
   <p><b>Ensure that every point in the file note is directly and explicitly based on the transcript. Do not infer or assume information that is not clearly stated by the adviser or the client during the meeting.</b></p>
+
+<p><b>Formatting requirements for your response:</b> 
+Return the file note in <b>Markdown only</b> (no HTML tags in your response) using the following rules:
+<ul>
+  <li>Use <code># </code> for the main title.</li>
+  <li>Use <code>## </code> for section headings (for example: <code>## 1. Meeting Details</code>).</li>
+  <li>Use <code>### </code> for any sub-headings.</li>
+  <li>Use bullet lists with <code>* </code> at the start of each bullet point.</li>
+</ul>
+Do not use hyphen bullets (<code>- </code>) or HTML headings in your response; use Markdown syntax only.
+</p>
   `,
 
   annual: `<h1>Annual Review Meeting File Note</h1>
@@ -368,7 +391,19 @@ export const MEETING_PROMPTS = {
   <li><b>Follow-up Requirements</b>: Specify any required follow-ups, such as further meetings or additional analysis, and provide context for their importance.</li>
 </ul>
 
-<p><b>Ensure that each section is fully detailed, formatted professionally, and based explicitly on the transcript. Do not infer or assume any information not clearly stated during the meeting.</b></p>`,
+<p><b>Ensure that each section is fully detailed, formatted professionally, and based explicitly on the transcript. Do not infer or assume any information not clearly stated during the meeting.</b></p>
+
+<p><b>Formatting requirements for your response:</b> 
+Return the file note in <b>Markdown only</b> (no HTML tags in your response) using the following rules:
+<ul>
+  <li>Use <code># </code> for the main title.</li>
+  <li>Use <code>## </code> for section headings (for example: <code>## 1. Meeting Details</code>).</li>
+  <li>Use <code>### </code> for any sub-headings.</li>
+  <li>Use bullet lists with <code>* </code> at the start of each bullet point.</li>
+</ul>
+Do not use hyphen bullets (<code>- </code>) or HTML headings in your response; use Markdown syntax only.
+</p>
+`,
 
   soa: `<h1>Statement of Advice (SoA) Presentation Meeting File Note</h1>
 
@@ -478,5 +513,15 @@ export const MEETING_PROMPTS = {
 
 <p><b>Ensure all specifics are extracted directly from the transcript, including amounts, percentages, product names, and client responses.</b></p>
 
+<p><b>Formatting requirements for your response:</b> 
+Return the file note in <b>Markdown only</b> (no HTML tags in your response) using the following rules:
+<ul>
+  <li>Use <code># </code> for the main title.</li>
+  <li>Use <code>## </code> for section headings (for example: <code>## 1. Meeting Details</code>).</li>
+  <li>Use <code>### </code> for any sub-headings.</li>
+  <li>Use bullet lists with <code>* </code> at the start of each bullet point.</li>
+</ul>
+Do not use hyphen bullets (<code>- </code>) or HTML headings in your response; use Markdown syntax only.
+</p>
 `
 };

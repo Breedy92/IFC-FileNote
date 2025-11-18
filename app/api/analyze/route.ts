@@ -1,11 +1,9 @@
-// app/api/analyze/route.ts
-
 import OpenAI from 'openai';
 import { NextResponse } from 'next/server';
 import sanitizeHtml from 'sanitize-html';
 import { MEETING_PROMPTS } from '@/lib/config';
 
-const sanitizeOptions: sanitizeHtml.IOptions = {
+const sanitizeOptions = {
   allowedTags: ['h1', 'h2', 'h3', 'p', 'ul', 'ol', 'li', 'b', 'strong', 'i', 'em'],
   allowedAttributes: {},
 };
@@ -22,10 +20,7 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const { transcript, meetingType } = body as {
-      transcript?: string;
-      meetingType?: string;
-    };
+    const { transcript, meetingType } = body;
 
     if (!transcript || typeof transcript !== 'string') {
       return NextResponse.json(
@@ -34,30 +29,29 @@ export async function POST(req: Request) {
       );
     }
 
-    if (!meetingType || !MEETING_PROMPTS[meetingType as keyof typeof MEETING_PROMPTS]) {
+    if (!meetingType || !MEETING_PROMPTS[meetingType]) {
       return NextResponse.json(
         { error: 'Please provide a valid meeting type' },
         { status: 400 }
       );
     }
 
-    const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-    // GPT-5 chat completions (no temp, no token limits)
     const completion = await openai.chat.completions.create({
-      model: 'gpt-5',
+      model: 'gpt-5-nano',
       messages: [
         {
           role: 'system',
-          content: MEETING_PROMPTS[meetingType as keyof typeof MEETING_PROMPTS],
+          content: MEETING_PROMPTS[meetingType],
         },
         {
           role: 'user',
           content: transcript,
         },
       ],
+      temperature: 0.4,
+      max_completion_tokens: 2000,
     });
 
     const summary = completion.choices[0]?.message?.content ?? '';
@@ -69,7 +63,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // --- Markdown-ish → HTML ---
     let processedSummary = summary
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
       .replace(/\[(.*?)\]/g, '$1')
@@ -77,7 +70,7 @@ export async function POST(req: Request) {
       .replace(/^## (.*?)$/gm, '<h2>$1</h2>')
       .replace(/^# (.*?)$/gm, '<h1>$1</h1>')
       .replace(/^\* (.*?)$/gm, '<li>$1</li>')
-      .replace(/\n\n+/g, '</p><p>');
+      .replace(/\n\n/g, '</p><p>');
 
     if (!/^<(h1|h2|h3|p|ul|ol|li)/i.test(processedSummary.trim())) {
       processedSummary = `<p>${processedSummary}</p>`;
@@ -86,9 +79,9 @@ export async function POST(req: Request) {
     const sanitizedHtml = sanitizeHtml(processedSummary, sanitizeOptions);
 
     return NextResponse.json({ summary: sanitizedHtml });
+    
   } catch (error) {
     console.error('Error analyzing transcript:', error);
-
     return NextResponse.json(
       {
         error:

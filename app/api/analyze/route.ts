@@ -10,16 +10,18 @@ const sanitizeOptions: sanitizeHtml.IOptions = {
   allowedAttributes: {},
 };
 
+// Node runtime + longer max duration
 export const runtime = 'nodejs';
 export const maxDuration = 60;
 
+// Hard cap transcript length
 const MAX_CHARS = 15000;
 
 export async function POST(req: Request) {
   if (!process.env.OPENAI_API_KEY) {
     return NextResponse.json(
       { error: 'OpenAI API key not configured' },
-      { status: 500 }
+      { status: 500 },
     );
   }
 
@@ -33,14 +35,17 @@ export async function POST(req: Request) {
     if (!transcript || typeof transcript !== 'string') {
       return NextResponse.json(
         { error: 'Please provide a valid transcript' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
-    if (!meetingType || !MEETING_PROMPTS[meetingType as keyof typeof MEETING_PROMPTS]) {
+    if (
+      !meetingType ||
+      !MEETING_PROMPTS[meetingType as keyof typeof MEETING_PROMPTS]
+    ) {
       return NextResponse.json(
         { error: 'Please provide a valid meeting type' },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -53,6 +58,7 @@ export async function POST(req: Request) {
       apiKey: process.env.OPENAI_API_KEY,
     });
 
+    // --- GPT-5-mini via chat.completions (no temp / max tokens) ---
     const completion = await openai.chat.completions.create({
       model: 'gpt-5-mini',
       messages: [
@@ -65,7 +71,6 @@ export async function POST(req: Request) {
           content: trimmedTranscript,
         },
       ],
-      // no temperature, no max_*tokens – GPT-5 mini is picky about these
     });
 
     const summary = completion.choices[0]?.message?.content ?? '';
@@ -73,6 +78,38 @@ export async function POST(req: Request) {
     if (!summary) {
       return NextResponse.json(
         { error: 'No summary generated' },
-        { status: 500 }
+        { status: 500 },
       );
     }
+
+    // Markdown-ish → HTML
+    let processedSummary = summary
+      .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+      .replace(/\[(.*?)\]/g, '$1')
+      .replace(/^### (.*?)$/gm, '<h3>$1</h3>')
+      .replace(/^## (.*?)$/gm, '<h2>$1</h2>')
+      .replace(/^# (.*?)$/gm, '<h1>$1</h1>')
+      .replace(/^\* (.*?)$/gm, '<li>$1</li>')
+      .replace(/\n\n+/g, '</p><p>');
+
+    if (!/^<(h1|h2|h3|p|ul|ol|li)/i.test(processedSummary.trim())) {
+      processedSummary = `<p>${processedSummary}</p>`;
+    }
+
+    const sanitizedHtml = sanitizeHtml(processedSummary, sanitizeOptions);
+
+    return NextResponse.json({ summary: sanitizedHtml });
+  } catch (error) {
+    console.error('Error analyzing transcript:', error);
+
+    return NextResponse.json(
+      {
+        error:
+          error instanceof Error
+            ? error.message
+            : 'An unexpected error occurred',
+      },
+      { status: 500 },
+    );
+  }
+}

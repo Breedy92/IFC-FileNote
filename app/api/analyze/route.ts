@@ -1,4 +1,4 @@
-// app/api/analyse-transcript/route.ts (or whatever your route path is)
+// app/api/analyze/route.ts  (adjust path/name to match your project)
 
 import OpenAI from 'openai';
 import { NextResponse } from 'next/server';
@@ -27,7 +27,7 @@ export async function POST(req: Request) {
       meetingType?: string;
     };
 
-    // Basic validation
+    // --- Validation ---
     if (!transcript || typeof transcript !== 'string') {
       return NextResponse.json(
         { error: 'Please provide a valid transcript' },
@@ -46,13 +46,12 @@ export async function POST(req: Request) {
       apiKey: process.env.OPENAI_API_KEY,
     });
 
-    // Responses API with GPT-5
-    const response = await openai.responses.create({
+    // --- Chat Completions with GPT-5 ---
+    const completion = await openai.chat.completions.create({
       model: 'gpt-5',
-      temperature: 0.4,
-      input: [
+      messages: [
         {
-          role: 'developer',
+          role: 'system',
           content: MEETING_PROMPTS[meetingType as keyof typeof MEETING_PROMPTS],
         },
         {
@@ -60,41 +59,40 @@ export async function POST(req: Request) {
           content: transcript,
         },
       ],
-      // You *can* add max_output_tokens if you want a hard cap:
-      // max_output_tokens: 2000,
+      temperature: 0.4,
+      // This is the new name that got you the first error when you used max_tokens
+      max_completion_tokens: 2000,
     });
 
-    // Per docs: this aggregates all text outputs into a single string
-    const summary = response.output_text;
+    const summary = completion.choices[0]?.message?.content ?? '';
 
-    if (!summary || typeof summary !== 'string') {
+    if (!summary) {
       return NextResponse.json(
         { error: 'No summary generated' },
         { status: 500 }
       );
     }
 
-    // --- Markdown-ish → HTML pass ---
+    // --- Markdown-ish → HTML ---
     let processedSummary = summary
       // **bold** → <strong>
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      // [text] → text (strip square brackets)
+      // [text] → text
       .replace(/\[(.*?)\]/g, '$1')
       // Headings
       .replace(/^### (.*?)$/gm, '<h3>$1</h3>')
       .replace(/^## (.*?)$/gm, '<h2>$1</h2>')
       .replace(/^# (.*?)$/gm, '<h1>$1</h1>')
-      // Bullet points "* " → <li>
+      // Bullets
       .replace(/^\* (.*?)$/gm, '<li>$1</li>')
       // Paragraph breaks
       .replace(/\n\n+/g, '</p><p>');
 
-    // Wrap in <p> if it doesn't start with a block tag already
+    // Wrap in <p> if not already a block
     if (!/^<(h1|h2|h3|p|ul|ol|li)/i.test(processedSummary.trim())) {
       processedSummary = `<p>${processedSummary}</p>`;
     }
 
-    // Final sanitise so nothing nasty slips through
     const sanitizedHtml = sanitizeHtml(processedSummary, sanitizeOptions);
 
     return NextResponse.json({ summary: sanitizedHtml });

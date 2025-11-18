@@ -1,4 +1,4 @@
-// app/api/analyze/route.ts  (adjust path/name to match your project)
+// app/api/analyze/route.ts
 
 import OpenAI from 'openai';
 import { NextResponse } from 'next/server';
@@ -27,7 +27,6 @@ export async function POST(req: Request) {
       meetingType?: string;
     };
 
-    // --- Validation ---
     if (!transcript || typeof transcript !== 'string') {
       return NextResponse.json(
         { error: 'Please provide a valid transcript' },
@@ -46,7 +45,7 @@ export async function POST(req: Request) {
       apiKey: process.env.OPENAI_API_KEY,
     });
 
-    // --- Chat Completions with GPT-5 ---
+    // GPT-5 chat completions (no temp, no token limits)
     const completion = await openai.chat.completions.create({
       model: 'gpt-5',
       messages: [
@@ -59,9 +58,6 @@ export async function POST(req: Request) {
           content: transcript,
         },
       ],
-      temperature: 0.4,
-      // This is the new name that got you the first error when you used max_tokens
-      max_completion_tokens: 2000,
     });
 
     const summary = completion.choices[0]?.message?.content ?? '';
@@ -75,20 +71,14 @@ export async function POST(req: Request) {
 
     // --- Markdown-ish → HTML ---
     let processedSummary = summary
-      // **bold** → <strong>
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-      // [text] → text
       .replace(/\[(.*?)\]/g, '$1')
-      // Headings
       .replace(/^### (.*?)$/gm, '<h3>$1</h3>')
       .replace(/^## (.*?)$/gm, '<h2>$1</h2>')
       .replace(/^# (.*?)$/gm, '<h1>$1</h1>')
-      // Bullets
       .replace(/^\* (.*?)$/gm, '<li>$1</li>')
-      // Paragraph breaks
       .replace(/\n\n+/g, '</p><p>');
 
-    // Wrap in <p> if not already a block
     if (!/^<(h1|h2|h3|p|ul|ol|li)/i.test(processedSummary.trim())) {
       processedSummary = `<p>${processedSummary}</p>`;
     }

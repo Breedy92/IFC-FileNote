@@ -50,8 +50,6 @@ export async function POST(req: Request) {
           content: transcript,
         },
       ],
-      temperature: 0.4,
-      max_completion_tokens: 2000,
     });
 
     const summary = completion.choices[0]?.message?.content ?? '';

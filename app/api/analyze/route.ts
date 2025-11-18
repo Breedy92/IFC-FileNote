@@ -10,11 +10,9 @@ const sanitizeOptions: sanitizeHtml.IOptions = {
   allowedAttributes: {},
 };
 
-// IMPORTANT: nodejs runtime + longer max duration
 export const runtime = 'nodejs';
-export const maxDuration = 60; // allow up to 60s
+export const maxDuration = 60;
 
-// crude but effective: cap transcript size
 const MAX_CHARS = 15000;
 
 export async function POST(req: Request) {
@@ -51,27 +49,27 @@ export async function POST(req: Request) {
         ? transcript.slice(0, MAX_CHARS)
         : transcript;
 
-    const openai = new OpenAI({
-      apiKey: process.env.OPENAI_API_KEY,
-    });
+    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 
-    const completion = await openai.chat.completions.create({
-      model: 'gpt-4.1-mini',
-      messages: [
+    // ---------------------------
+    // GPT-5-mini call (Responses API)
+    // ---------------------------
+    const response = await openai.responses.create({
+      model: "gpt-5-mini",
+      input: [
         {
-          role: 'system',
+          role: "developer",
           content: MEETING_PROMPTS[meetingType as keyof typeof MEETING_PROMPTS],
         },
         {
-          role: 'user',
+          role: "user",
           content: trimmedTranscript,
         },
       ],
-      temperature: 0.4,
-      max_completion_tokens: 2000,
+      reasoning: { effort: "medium" }, // optional but recommended for 5-mini
     });
 
-    const summary = completion.choices[0]?.message?.content ?? '';
+    const summary = response.output_text ?? "";
 
     if (!summary) {
       return NextResponse.json(
@@ -80,7 +78,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // Markdown-ish → HTML
+    // Convert markdown-ish → HTML
     let processedSummary = summary
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
       .replace(/\[(.*?)\]/g, '$1')

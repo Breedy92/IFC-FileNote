@@ -10,11 +10,11 @@ const sanitizeOptions: sanitizeHtml.IOptions = {
   allowedAttributes: {},
 };
 
-// Node runtime + longer max duration
+// IMPORTANT: nodejs runtime + longer max duration
 export const runtime = 'nodejs';
-export const maxDuration = 60;
+export const maxDuration = 60; // allow up to 60s
 
-// Hard cap transcript length
+// crude but effective: cap transcript size
 const MAX_CHARS = 15000;
 
 export async function POST(req: Request) {
@@ -58,9 +58,8 @@ export async function POST(req: Request) {
       apiKey: process.env.OPENAI_API_KEY,
     });
 
-    // --- GPT-5-mini via chat.completions (no temp / max tokens) ---
     const completion = await openai.chat.completions.create({
-      model: 'gpt-5-mini',
+      model: 'gpt-4.1-mini',
       messages: [
         {
           role: 'system',
@@ -71,6 +70,8 @@ export async function POST(req: Request) {
           content: trimmedTranscript,
         },
       ],
+      temperature: 0.4,
+      max_completion_tokens: 2000,
     });
 
     const summary = completion.choices[0]?.message?.content ?? '';
@@ -93,6 +94,7 @@ export async function POST(req: Request) {
       .replace(/\n\n+/g, '</p><p>');
 
     if (!/^<(h1|h2|h3|p|ul|ol|li)/i.test(processedSummary.trim())) {
+      // this was the broken line before – needs to be a string, not JSX
       processedSummary = `<p>${processedSummary}</p>`;
     }
 

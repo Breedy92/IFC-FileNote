@@ -1,14 +1,17 @@
+// app/api/analyze/route.ts
+
 import OpenAI from 'openai';
 import { NextResponse } from 'next/server';
 import sanitizeHtml from 'sanitize-html';
 import { MEETING_PROMPTS } from '@/lib/config';
 
-const sanitizeOptions = {
+const sanitizeOptions: sanitizeHtml.IOptions = {
   allowedTags: ['h1', 'h2', 'h3', 'p', 'ul', 'ol', 'li', 'b', 'strong', 'i', 'em'],
   allowedAttributes: {},
 };
 
-export const runtime = 'edge';
+// ⬅️ IMPORTANT: use nodejs, not edge
+export const runtime = 'nodejs';
 
 export async function POST(req: Request) {
   if (!process.env.OPENAI_API_KEY) {
@@ -20,7 +23,10 @@ export async function POST(req: Request) {
 
   try {
     const body = await req.json();
-    const { transcript, meetingType } = body;
+    const { transcript, meetingType } = body as {
+      transcript?: string;
+      meetingType?: string;
+    };
 
     if (!transcript || typeof transcript !== 'string') {
       return NextResponse.json(
@@ -29,21 +35,24 @@ export async function POST(req: Request) {
       );
     }
 
-    if (!meetingType || !MEETING_PROMPTS[meetingType]) {
+    if (!meetingType || !MEETING_PROMPTS[meetingType as keyof typeof MEETING_PROMPTS]) {
       return NextResponse.json(
         { error: 'Please provide a valid meeting type' },
         { status: 400 }
       );
     }
 
-    const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+    const openai = new OpenAI({
+      apiKey: process.env.OPENAI_API_KEY,
+    });
 
+    // No temperature, no max_*tokens – nano doesn’t like them in your setup
     const completion = await openai.chat.completions.create({
       model: 'gpt-5-nano',
       messages: [
         {
           role: 'system',
-          content: MEETING_PROMPTS[meetingType],
+          content: MEETING_PROMPTS[meetingType as keyof typeof MEETING_PROMPTS],
         },
         {
           role: 'user',
@@ -52,7 +61,7 @@ export async function POST(req: Request) {
       ],
     });
 
-    const summary = completion.choices[0]?.message?.content ?? '';
+    const summary = completion.choices?.[0]?.message?.content ?? '';
 
     if (!summary) {
       return NextResponse.json(
@@ -61,6 +70,7 @@ export async function POST(req: Request) {
       );
     }
 
+    // --- Markdown-ish → HTML ---
     let processedSummary = summary
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
       .replace(/\[(.*?)\]/g, '$1')
@@ -68,7 +78,7 @@ export async function POST(req: Request) {
       .replace(/^## (.*?)$/gm, '<h2>$1</h2>')
       .replace(/^# (.*?)$/gm, '<h1>$1</h1>')
       .replace(/^\* (.*?)$/gm, '<li>$1</li>')
-      .replace(/\n\n/g, '</p><p>');
+      .replace(/\n\n+/g, '</p><p>');
 
     if (!/^<(h1|h2|h3|p|ul|ol|li)/i.test(processedSummary.trim())) {
       processedSummary = `<p>${processedSummary}</p>`;
@@ -77,9 +87,9 @@ export async function POST(req: Request) {
     const sanitizedHtml = sanitizeHtml(processedSummary, sanitizeOptions);
 
     return NextResponse.json({ summary: sanitizedHtml });
-    
   } catch (error) {
     console.error('Error analyzing transcript:', error);
+
     return NextResponse.json(
       {
         error:

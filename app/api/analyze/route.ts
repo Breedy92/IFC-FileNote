@@ -82,8 +82,12 @@ export async function POST(req: Request) {
       );
     }
 
+    // --- NORMALISE BULLETS FIRST ---
+    // Turn " ... * something" into a real bullet on its own line
+    const normalizedSummary = summary.replace(/\s\*\s/g, '\n* ');
+
     // Markdown-ish → HTML
-    let processedSummary = summary
+    let processedSummary = normalizedSummary
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
       .replace(/\[(.*?)\]/g, '$1')
       .replace(/^### (.*?)$/gm, '<h3>$1</h3>')
@@ -92,8 +96,13 @@ export async function POST(req: Request) {
       .replace(/^\* (.*?)$/gm, '<li>$1</li>')
       .replace(/\n\n+/g, '</p><p>');
 
+    // Wrap consecutive <li> tags in a <ul> so nested lists are valid
+    processedSummary = processedSummary.replace(
+      /((?:<li>[\s\S]*?<\/li>\s*)+)/g,
+      '<ul>$1</ul>',
+    );
+
     if (!/^<(h1|h2|h3|p|ul|ol|li)/i.test(processedSummary.trim())) {
-      // this was the broken line before – needs to be a string, not JSX
       processedSummary = `<p>${processedSummary}</p>`;
     }
 

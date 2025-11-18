@@ -1,17 +1,33 @@
-// app/api/analyze/route.ts
-
-import OpenAI from 'openai';
+import { OpenAI } from 'openai';
 import { NextResponse } from 'next/server';
 import sanitizeHtml from 'sanitize-html';
 import { MEETING_PROMPTS } from '@/lib/config';
 
-const sanitizeOptions: sanitizeHtml.IOptions = {
+const sanitizeOptions = {
   allowedTags: ['h1', 'h2', 'h3', 'p', 'ul', 'ol', 'li', 'b', 'strong', 'i', 'em'],
   allowedAttributes: {},
+  transformTags: {
+    '*': function (tagName: string, attribs: Record<string, any>) {
+      // NOTE: this is probably not doing much, but leaving it as you had it
+      if (tagName === 'p' && typeof attribs.textContent === 'string' && /^#+\s/.test(attribs.textContent)) {
+        const match = attribs.textContent.match(/^#+/);
+        const level = match ? match[0].length : 0;
+        if (level >= 1 && level <= 3) {
+          return {
+            tagName: `h${level}`,
+            attribs: {},
+          };
+        }
+      }
+      return {
+        tagName,
+        attribs,
+      };
+    },
+  },
 };
 
-// ⬅️ IMPORTANT: use nodejs, not edge
-export const runtime = 'nodejs';
+export const runtime = 'edge';
 
 export async function POST(req: Request) {
   if (!process.env.OPENAI_API_KEY) {
@@ -46,9 +62,11 @@ export async function POST(req: Request) {
       apiKey: process.env.OPENAI_API_KEY,
     });
 
-    // No temperature, no max_*tokens – nano doesn’t like them in your setup
     const completion = await openai.chat.completions.create({
-      model: 'gpt-5-nano',
+      // OLD:
+      // model: "gpt-4-0125-preview",
+      // NEW (recommended):
+      model: 'gpt-4.1-mini',
       messages: [
         {
           role: 'system',
@@ -59,9 +77,14 @@ export async function POST(req: Request) {
           content: transcript,
         },
       ],
+      temperature: 0.7,
+      // OLD:
+      // max_tokens: 2000,
+      // NEW:
+      max_completion_tokens: 2000,
     });
 
-    const summary = completion.choices?.[0]?.message?.content ?? '';
+    const summary = completion.choices[0]?.message?.content;
 
     if (!summary) {
       return NextResponse.json(
@@ -70,7 +93,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // --- Markdown-ish → HTML ---
+    // Convert markdown-style formatting to HTML
     let processedSummary = summary
       .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
       .replace(/\[(.*?)\]/g, '$1')
@@ -78,11 +101,8 @@ export async function POST(req: Request) {
       .replace(/^## (.*?)$/gm, '<h2>$1</h2>')
       .replace(/^# (.*?)$/gm, '<h1>$1</h1>')
       .replace(/^\* (.*?)$/gm, '<li>$1</li>')
-      .replace(/\n\n+/g, '</p><p>');
-
-    if (!/^<(h1|h2|h3|p|ul|ol|li)/i.test(processedSummary.trim())) {
-      processedSummary = `<p>${processedSummary}</p>`;
-    }
+      .replace(/\n\n/g, '</p><p>')
+      .replace(/^(?!<[h|p|u|o])/gm, '<p>');
 
     const sanitizedHtml = sanitizeHtml(processedSummary, sanitizeOptions);
 
@@ -92,10 +112,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json(
       {
-        error:
-          error instanceof Error
-            ? error.message
-            : 'An unexpected error occurred',
+        error: error instanceof Error ? error.message : 'An unexpected error occurred',
       },
       { status: 500 }
     );

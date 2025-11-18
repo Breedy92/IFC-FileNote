@@ -18,15 +18,8 @@ export const MEETING_PROMPTS = {
   <li><b>Adviser Present</b>: Identify the adviser(s) present using the following steps:
     <ul>
       <li>If the person recording the transcript is mentioned as the adviser (e.g., "Troy"), use their name as the adviser present unless otherwise specified in the transcript.</li>
-      <li>If the transcript explicitly identifies the adviser by name (e.g., "Matt Katunar" or "Briannah Starkey"), replace the name with the corresponding substitute:
-        <ul>
-          <li>Replace "Matt Katunar" with <b>Will McEniery-Wallace</b>.</li>
-          <li>Replace "Briannah Starkey" with <b>Jonathon Perna</b>.</li>
-        </ul>
-      </li>
       <li>If both the recorder and an adviser are mentioned, prioritize the explicitly identified adviser but still apply the substitution rule for Matt or Briannah as needed.</li>
     </ul>
-    <b>Do not mention any replacement or original name; only show the final substituted names, e.g., 'Will McEniery-Wallace' or 'Jonathon Perna.'</b>
   </li>
   <li><b>Date of Meeting</b>: Extract the meeting date from the transcript and format it as DD/MM/YYYY.</li>
   <li><b>Method of Meeting</b>: Specify whether the meeting was conducted <b>"In-person"</b> or <b>"Online"</b>. Use the following rules:
@@ -109,8 +102,10 @@ Return the file note in <b>Markdown only</b> (no HTML tags in your response) usi
   <li>Use <code>## </code> for section headings (for example: <code>## 1. Meeting Details</code>).</li>
   <li>Use <code>### </code> for any sub-headings.</li>
   <li>Use bullet lists with <code>* </code> at the start of each bullet point.</li>
+  <li><b>Each bullet point must be on its own line.</b> Do not place more than one <code>* </code> bullet in the same line.</li>
 </ul>
-Do not use hyphen bullets (<code>- </code>) or HTML headings in your response; use Markdown syntax only.
+Do not use hyphen bullets (<code>- </code>) or HTML headings in your response; use Markdown syntax only. 
+Do not use <code>*</code> for italics or anything other than bullet points.
 </p>
 `,
 
@@ -133,15 +128,8 @@ Do not use hyphen bullets (<code>- </code>) or HTML headings in your response; u
   <li><b>Adviser Present</b>: Identify the adviser(s) present using the following steps:
     <ul>
       <li>If the person recording the transcript is mentioned as the adviser (e.g., "Troy"), use their name as the adviser present unless otherwise specified in the transcript.</li>
-      <li>If the transcript explicitly identifies the adviser by name (e.g., "Matt Katunar" or "Briannah Starkey"), replace the name with the corresponding substitute:
-        <ul>
-          <li>Replace "Matt Katunar" with <b>Will McEniery-Wallace</b>.</li>
-          <li>Replace "Briannah Starkey" with <b>Jonathon Perna</b>.</li>
-        </ul>
-      </li>
       <li>If both the recorder and an adviser are mentioned, prioritize the explicitly identified adviser but still apply the substitution rule for Matt or Briannah as needed.</li>
     </ul>
-    <b>Do not mention any replacement or original name; only show the final substituted names, e.g., 'Will McEniery-Wallace' or 'Jonathon Perna.'</b>
   </li>
   <li><b>Date of Meeting</b>: Extract the meeting date from the transcript and format it as DD/MM/YYYY.</li>
   <li><b>Method of Meeting</b>: Specify whether the meeting was conducted <b>"In-person"</b> or <b>"Online"</b>. Use the following rules:
@@ -250,8 +238,10 @@ Return the file note in <b>Markdown only</b> (no HTML tags in your response) usi
   <li>Use <code>## </code> for section headings (for example: <code>## 1. Meeting Details</code>).</li>
   <li>Use <code>### </code> for any sub-headings.</li>
   <li>Use bullet lists with <code>* </code> at the start of each bullet point.</li>
+  <li><b>Each bullet point must be on its own line.</b> Do not place more than one <code>* </code> bullet in the same line.</li>
 </ul>
-Do not use hyphen bullets (<code>- </code>) or HTML headings in your response; use Markdown syntax only.
+Do not use hyphen bullets (<code>- </code>) or HTML headings in your response; use Markdown syntax only. 
+Do not use <code>*</code> for italics or anything other than bullet points.
 </p>
   `,
 
@@ -274,15 +264,8 @@ Do not use hyphen bullets (<code>- </code>) or HTML headings in your response; u
   <li><b>Adviser Present</b>: Identify the adviser(s) present using the following steps:
     <ul>
       <li>If the person recording the transcript is mentioned as the adviser (e.g., "Troy"), use their name as the adviser present unless otherwise specified in the transcript.</li>
-      <li>If the transcript explicitly identifies the adviser by name (e.g., "Matt Katunar" or "Briannah Starkey"), replace the name with the corresponding substitute:
-        <ul>
-          <li>Replace "Matt Katunar" with <b>Will McEniery-Wallace</b>.</li>
-          <li>Replace "Briannah Starkey" with <b>Jonathon Perna</b>.</li>
-        </ul>
-      </li>
       <li>If both the recorder and an adviser are mentioned, prioritize the explicitly identified adviser but still apply the substitution rule for Matt or Briannah as needed.</li>
     </ul>
-    <b>Do not mention any replacement or original name; only show the final substituted names, e.g., 'Will McEniery-Wallace' or 'Jonathon Perna.'</b>
   </li>
   <li><b>Date of Meeting</b>: Extract the meeting date from the transcript and format it as DD/MM/YYYY.</li>
   <li><b>Method of Meeting</b>: Specify whether the meeting was conducted <b>"In-person"</b> or <b>"Online"</b>. Use the following rules:
@@ -400,8 +383,10 @@ Return the file note in <b>Markdown only</b> (no HTML tags in your response) usi
   <li>Use <code>## </code> for section headings (for example: <code>## 1. Meeting Details</code>).</li>
   <li>Use <code>### </code> for any sub-headings.</li>
   <li>Use bullet lists with <code>* </code> at the start of each bullet point.</li>
+  <li><b>Each bullet point must be on its own line.</b> Do not place more than one <code>* </code> bullet in the same line.</li>
 </ul>
-Do not use hyphen bullets (<code>- </code>) or HTML headings in your response; use Markdown syntax only.
+Do not use hyphen bullets (<code>- </code>) or HTML headings in your response; use Markdown syntax only. 
+Do not use <code>*</code> for italics or anything other than bullet points.
 </p>
 `,
 
@@ -424,15 +409,8 @@ Do not use hyphen bullets (<code>- </code>) or HTML headings in your response; u
   <li><b>Adviser Present</b>: Identify the adviser(s) present using the following steps:
     <ul>
       <li>If the person recording the transcript is mentioned as the adviser (e.g., "Troy"), use their name as the adviser present unless otherwise specified in the transcript.</li>
-      <li>If the transcript explicitly identifies the adviser by name (e.g., "Matt Katunar" or "Briannah Starkey"), replace the name with the corresponding substitute:
-        <ul>
-          <li>Replace "Matt Katunar" with <b>Will McEniery-Wallace</b>.</li>
-          <li>Replace "Briannah Starkey" with <b>Jonathon Perna</b>.</li>
-        </ul>
-      </li>
       <li>If both the recorder and an adviser are mentioned, prioritize the explicitly identified adviser but still apply the substitution rule for Matt or Briannah as needed.</li>
     </ul>
-    <b>Do not mention any replacement or original name; only show the final substituted names, e.g., 'Will McEniery-Wallace' or 'Jonathon Perna.'</b>
   </li>
   <li><b>Date of Meeting</b>: Extract the meeting date from the transcript and format it as DD/MM/YYYY.</li>
   <li><b>Method of Meeting</b>: Specify whether the meeting was conducted <b>"In-person"</b> or <b>"Online"</b>. Use the following rules:
@@ -520,8 +498,10 @@ Return the file note in <b>Markdown only</b> (no HTML tags in your response) usi
   <li>Use <code>## </code> for section headings (for example: <code>## 1. Meeting Details</code>).</li>
   <li>Use <code>### </code> for any sub-headings.</li>
   <li>Use bullet lists with <code>* </code> at the start of each bullet point.</li>
+  <li><b>Each bullet point must be on its own line.</b> Do not place more than one <code>* </code> bullet in the same line.</li>
 </ul>
-Do not use hyphen bullets (<code>- </code>) or HTML headings in your response; use Markdown syntax only.
+Do not use hyphen bullets (<code>- </code>) or HTML headings in your response; use Markdown syntax only. 
+Do not use <code>*</code> for italics or anything other than bullet points.
 </p>
 `
 };
